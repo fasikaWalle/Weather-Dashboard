@@ -66,33 +66,29 @@ var getWeatherInfo = function (city) {
               // displayWeatherStatus(weatherData, data);
             })
             .catch((error) => {
+              errorMessage();
               console.log(error);
             });
         })
         .catch(function (error) {
+          errorMessage();
           console.log(error);
         });
     })
     .catch((error) => {
+      errorMessage();
       console.log("unable to connect the server" + error);
     });
 };
-
-// get location key
-// var getLocationCoordinate = function (city) {
-//   return fetch(
-//     "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-//       city +
-//       "&key=AIzaSyBa-FnbmtIaZwuxcv1y8P9ukGSSFW6o1ag"
-//   ).then(function (response) {
-//       response.json();
-//     })
-//     .then(function (data) {
-//       console.log(data);
-//     });
-// };
-
-//get the user input from the form
+function errorMessage() {
+  cityNameE1.textContent = "";
+  currentWeatherInfoE1.textContent = "";
+  futureWeatherContainer.textContent = "";
+  var error = document.createElement("div");
+  error.classListName = "alert alert-secondary";
+  error.textContent = "unable to connect the server please check your input";
+  currentWeatherInfoE1.appendChild(error);
+}
 var getUserCity = function (event) {
   event.preventDefault();
   var userCity = userInputE1.value.trim();
@@ -103,18 +99,6 @@ var getUserCity = function (event) {
     alert("please insert correct name");
   }
 };
-
-//check city history
-function checkHistoryCity(city) {
-  var flag = false;
-  cityHistory.forEach((cityitem) => {
-    if (cityitem.toUpperCase() === city.toUpperCase()) {
-      flag = true;
-    }
-  });
-  cityHistory.push(city);
-  return flag;
-}
 
 //append city name
 function appendCityName(city) {
@@ -127,43 +111,16 @@ function appendCityName(city) {
   listHistoryE1.textContent = city;
   searchHistory.append(listHistoryE1);
 }
-//save to local storage
-function saveWeatherInfo(weatherInfo) {
-  console.log(weatherInfo);
-  localStorage.setItem("weather-info", JSON.stringify(weatherInfo));
-}
-// retrive from  local storage
-// function loadWeatherInfo(data, cityName, UvIndex) {
-// function loadWeatherInfo(weatherInfo) {
-//   // var weatherData = JSON.parse(localStorage.getItem("weather-info")) || [];
-//   if(!weatherData){
-//     weatherData.push(weatherInfo);
-//   }else if(weatherData.){
-//     weatherData.push(weatherInfo);
-//   }
-
-//   console.log(weatherData);
-
-// }
-//
-// change to localstorage format
-function filterUniqueData(data) {
-  var array = data.list;
-  var uniqueDate = [];
-  var distinct = [];
-  for (let i = 0; i < array.length; i++) {
-    var currentDate = array[i].dt_txt;
-    currentDate = moment(currentDate).format("L");
-    // 2021 - 01 - 18;
-    console.log(currentDate);
-    var dateExists = uniqueDate.indexOf(currentDate);
-    if (dateExists < 0) {
-      distinct.push(array[i]);
-      uniqueDate.push(currentDate);
+//check the city name in case if it exist in localstorage
+function checkHistoryCity(city) {
+  var flag = false;
+  cityHistory.forEach((cityitem) => {
+    if (cityitem.toUpperCase() === city.toUpperCase()) {
+      flag = true;
     }
-  }
-  console.log(distinct);
-  return distinct;
+  });
+  cityHistory.push(city);
+  return flag;
 }
 function ChangeDataFormat(data, UvIndex) {
   var weatherInfo = JSON.parse(localStorage.getItem("weather-info")) || [];
@@ -209,26 +166,30 @@ function ChangeDataFormat(data, UvIndex) {
 
   displayWeatherStatus(city);
 }
-
-//check the cityname of the history that we click to local storage city name
-function displayLocalData(cityName) {
-  var weatherInfo = JSON.parse(localStorage.getItem("weather-info"));
-
-  console.log(cityName);
-  for (var i = 0; i < weatherInfo.length; i++) {
-    if (weatherInfo[i].name.toUpperCase() == cityName.toUpperCase()) {
-      displayWeatherStatus(weatherInfo[i]);
+//filter the data by its date inorder to avoid similar dates
+function filterUniqueData(data) {
+  var array = data.list;
+  var uniqueDate = [];
+  var distinct = [];
+  for (let i = 0; i < array.length; i++) {
+    var currentDate = array[i].dt_txt;
+    currentDate = moment(currentDate).format("L");
+    // 2021 - 01 - 18;
+    console.log(currentDate);
+    var dateExists = uniqueDate.indexOf(currentDate);
+    if (dateExists < 0) {
+      distinct.push(array[i]);
+      uniqueDate.push(currentDate);
     }
-
-    // displayWeatherStatus(item.weather, item.name, item.uvIndex);
   }
+  console.log(distinct);
+  return distinct;
 }
-//event handler
-
-//uvIndexCondition
-
-//display weather status for the current day and for the future 5 days
-// var displayWeatherStatus = function (data, city, uvIndex) {
+//save weatherinfo to the localstorage
+function saveWeatherInfo(weatherInfo) {
+  console.log(weatherInfo);
+  localStorage.setItem("weather-info", JSON.stringify(weatherInfo));
+}
 function displayWeatherStatus(weatherInfo) {
   console.log(weatherInfo);
   cityNameE1.textContent = "";
@@ -270,7 +231,7 @@ function displayWeatherStatus(weatherInfo) {
 
     listCurrentWeaterE1.className = "list-unstyled list-group-item border-0";
     listCurrentWeaterE1.innerHTML =
-      i + ":" + "<span class='uvIndex'>" + currentDayWeather[i] + "</span>";
+      i + ":" + "<span>" + currentDayWeather[i] + "</span>";
 
     // index++;
     console.log(currentDayWeather[i]);
@@ -280,20 +241,18 @@ function displayWeatherStatus(weatherInfo) {
       listCurrentWeaterE1.appendChild(degreeF);
     }
     if (index === 3) {
-      var uvIn = document.querySelector(".uvIndex");
-      if (uvIn.textContent < 10) {
-        var uvIndex = Math.floor(currentDayWeather[i]);
-        if (uvIndex >= 0 && uvIndex <= 2) {
-          uvIn.className = "green";
-        } else if (uvIndex >= 3 && uvIndex <= 5) {
-          listCurrentWeaterE1.className = "yellow";
-        } else if (uvIndex >= 6 && uvIndex <= 7) {
-          listCurrentWeaterE1.className = "orange";
-        } else if (uvIndex >= 8 && uvIndex <= 10) {
-          listCurrentWeaterE1.className = "red";
-        } else if (uvIndex >= 10) {
-          listCurrentWeaterE1.className = "pink";
-        }
+      var uvIndex = Math.floor(currentDayWeather[i]);
+
+      if (uvIndex >= 0 && uvIndex <= 2) {
+        listCurrentWeaterE1.className = "green";
+      } else if (uvIndex >= 3 && uvIndex <= 5) {
+        listCurrentWeaterE1.className = "yellow";
+      } else if (uvIndex >= 6 && uvIndex <= 7) {
+        listCurrentWeaterE1.className = "orange";
+      } else if (uvIndex >= 8 && uvIndex <= 10) {
+        listCurrentWeaterE1.className = "red";
+      } else if (uvIndex >= 10) {
+        listCurrentWeaterE1.className = "pink";
       }
     }
     currentWeatherInfoE1.appendChild(listCurrentWeaterE1);
@@ -307,6 +266,7 @@ function displayWeatherStatus(weatherInfo) {
 //   }
 // });
 
+//display 5 day weather status
 function displayFutureWeather(weatherInfo) {
   for (var i = 1; i < 6; i++) {
     // var UvIndex
@@ -364,7 +324,7 @@ function displayFutureWeather(weatherInfo) {
     futureWeatherContainer.appendChild(cardWrapper);
   }
 }
-//retrive data from localstorage when we click the history information
+//target the history city name by event deligation
 var retriveWeatherInfo = function (event) {
   var getCityName = event.target.innerHTML;
   displayLocalData(getCityName);
@@ -372,3 +332,17 @@ var retriveWeatherInfo = function (event) {
 searchHistory.addEventListener("click", retriveWeatherInfo);
 
 userFormE1.addEventListener("submit", getUserCity);
+
+//display datta from localstorage when we click the history list
+function displayLocalData(cityName) {
+  var weatherInfo = JSON.parse(localStorage.getItem("weather-info"));
+
+  console.log(cityName);
+  for (var i = 0; i < weatherInfo.length; i++) {
+    if (weatherInfo[i].name.toUpperCase() == cityName.toUpperCase()) {
+      displayWeatherStatus(weatherInfo[i]);
+    }
+
+    // displayWeatherStatus(item.weather, item.name, item.uvIndex);
+  }
+}
