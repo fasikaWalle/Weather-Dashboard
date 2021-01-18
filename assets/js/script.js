@@ -66,18 +66,29 @@ var getWeatherInfo = function (city) {
               // displayWeatherStatus(weatherData, data);
             })
             .catch((error) => {
+              errorMessage();
               console.log(error);
             });
         })
         .catch(function (error) {
+          errorMessage();
           console.log(error);
         });
     })
     .catch((error) => {
+      errorMessage();
       console.log("unable to connect the server" + error);
     });
 };
-
+function errorMessage() {
+  cityNameE1.textContent = "";
+  currentWeatherInfoE1.textContent = "";
+  futureWeatherContainer.textContent = "";
+  var error = document.createElement("div");
+  error.classListName = "alert alert-secondary";
+  error.textContent = "unable to connect the server please check your input";
+  currentWeatherInfoE1.appendChild(error);
+}
 var getUserCity = function (event) {
   event.preventDefault();
   var userCity = userInputE1.value.trim();
