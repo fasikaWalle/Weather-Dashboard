@@ -19,8 +19,8 @@ This application is designed to show the 5 days forcast weather for the specific
 
 ### URL of the project
 
-- Github Repo:https:https://github.com/fasikaWalle/WorkDay-Scheduler
+- Github Repo:https://github.com/fasikaWalle/Weather-Dashboard
 
-- Live site URL:https://fasikawalle.github.io/WorkDay-Scheduler/
+- Live site URL:https://fasikawalle.github.io/Weather-Dashboard/
 
 ## screenshots
