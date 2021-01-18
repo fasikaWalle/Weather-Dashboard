@@ -313,6 +313,15 @@ function displayFutureWeather(weatherInfo) {
     futureWeatherContainer.appendChild(cardWrapper);
   }
 }
+//target the history city name by event deligation
+var retriveWeatherInfo = function (event) {
+  var getCityName = event.target.innerHTML;
+  displayLocalData(getCityName);
+};
+searchHistory.addEventListener("click", retriveWeatherInfo);
+
+userFormE1.addEventListener("submit", getUserCity);
+
 //display datta from localstorage when we click the history list
 function displayLocalData(cityName) {
   var weatherInfo = JSON.parse(localStorage.getItem("weather-info"));
