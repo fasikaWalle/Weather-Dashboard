@@ -21,6 +21,6 @@ This application is designed to show the 5 days forcast weather for the specific
 
 - Github Repo:https://github.com/fasikaWalle/Weather-Dashboard
 
-- Live site URL:https://fasikawalle.github.io/Weather-Dashboard/ler/
+- Live site URL:https://fasikawalle.github.io/Weather-Dashboard/
 
 ## screenshots
