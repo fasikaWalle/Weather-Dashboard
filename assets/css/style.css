@@ -4,7 +4,9 @@
   box-sizing: border-box;
   font-size: 20px;
 }
-
+.searchCity {
+  margin-left: 4%;
+}
 form label {
   font-size: 140%;
 }
@@ -16,6 +18,51 @@ form label {
 #future-weather {
   max-width: 12rem;
 }
-.emoj {
-  content: "\u2109";
+.card-body {
+  text-align: center;
+  background-color: #2980b9;
+  color: #fff;
+}
+.cloudy {
+  color: rgb(132, 200, 240);
+  font-size: 200%;
+}
+.ion-ios7-sunny {
+  font-size: 250%;
+  text-align: center;
+  color: rgb(247, 46, 46);
+}
+.ion-ios7-partlysunny {
+  font-size: 250%;
+  color: rgb(158, 196, 240);
+}
+.ion-ios7-rainy {
+  font-size: 250%;
+  color: rgb(113, 125, 139);
+}
+.red,
+.green,
+.yellow,
+.orange,
+.pink {
+  padding: 0;
+  padding-top: 0;
+  height: 30px;
+  width: 28%;
+  color: #fff;
+}
+.red {
+  background-color: #e74c3c;
+}
+.green {
+  background-color: #16a085;
+}
+.yellow {
+  background-color: #f1c40f;
+}
+.orange {
+  background-color: #f39c12;
+}
+.pink {
+  background-color: #f1178b;
 }
