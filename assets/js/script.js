@@ -163,3 +163,8 @@ function filterUniqueData(data) {
   console.log(distinct);
   return distinct;
 }
+//save weatherinfo to the localstorage
+function saveWeatherInfo(weatherInfo) {
+  console.log(weatherInfo);
+  localStorage.setItem("weather-info", JSON.stringify(weatherInfo));
+}
