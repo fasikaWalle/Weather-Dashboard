@@ -100,3 +100,47 @@ function appendCityName(city) {
   listHistoryE1.textContent = city;
   searchHistory.append(listHistoryE1);
 }
+function ChangeDataFormat(data, UvIndex) {
+  var weatherInfo = JSON.parse(localStorage.getItem("weather-info")) || [];
+  // var weatherInfo = [];
+  console.log(data);
+  var uniqeData = filterUniqueData(data);
+  data.list = uniqeData;
+  var weatherFutureInfo = {};
+  var weather = [];
+  var city = {};
+  console.log(data);
+  weatherFutureInfo.date = data.list[0].dt_txt;
+  weatherFutureInfo.icon = data.list[0].weather[0].icon;
+  weatherFutureInfo.temp = data.list[0].main.temp;
+  weatherFutureInfo.humidity = data.list[0].main.humidity;
+  weatherFutureInfo.speed = data.list[0].wind.speed;
+  weatherFutureInfo.Uvindex = UvIndex.value;
+  weather.push(weatherFutureInfo);
+  console.log(data);
+
+  for (var i = 1; i < 6; i++) {
+    var weatherFutureInfo = {};
+    weatherFutureInfo.date = data.list[i].dt_txt;
+    console.log(weatherFutureInfo.date);
+    weatherFutureInfo.temp = data.list[i].main.temp;
+    weatherFutureInfo.humidity = data.list[i].main.humidity;
+    weather.push(weatherFutureInfo);
+  }
+  city.name = data.city.name;
+  city.weather = weather;
+  // weatherInfo.push(city);
+  var flag = 0;
+  for (var i = 0; i < weatherInfo.length; i++) {
+    if (weatherInfo[i].name == city.name) {
+      flag = 1;
+      break;
+    }
+  }
+  if (flag == 0) {
+    weatherInfo.push(city);
+    saveWeatherInfo(weatherInfo);
+  }
+
+  displayWeatherStatus(city);
+}
