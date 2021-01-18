@@ -13,7 +13,7 @@ var cityHistory = [];
 
 var getWeatherInfo = function (city) {
   fetch(
-    "http://api.openweathermap.org/data/2.5/forecast?q=" +
+    "https://api.openweathermap.org/data/2.5/forecast?q=" +
       city +
       ",US&appid=9a13e2c3a669281036969bd73512a30b"
   )
@@ -47,7 +47,7 @@ var getWeatherInfo = function (city) {
           var cityLatitude = data.results[0].geometry.location.lat;
 
           fetch(
-            "http://api.openweathermap.org/data/2.5/uvi?lat=" +
+            "https://api.openweathermap.org/data/2.5/uvi?lat=" +
               cityLatitude +
               "&lon=" +
               cityLongtiude +
@@ -201,7 +201,8 @@ function displayWeatherStatus(weatherInfo) {
 
   var weatherIconI = document.createElement("img");
   weatherIconI.className = "fs-3 text";
-  weatherIconI.src = "http://openweathermap.org/img/wn/" + weatherIcon + ".png";
+  weatherIconI.src =
+    "https://openweathermap.org/img/wn/" + weatherIcon + ".png";
 
   cityNameE1.innerHTML =
     "<span>" + city + " " + "&#40;" + currentDate + "&#41</span>";
