@@ -231,17 +231,17 @@ function displayWeatherStatus(weatherInfo) {
     }
     if (index === 3) {
       var uvIndex = Math.floor(currentDayWeather[i]);
-
       if (uvIndex >= 0 && uvIndex <= 2) {
-        listCurrentWeaterE1.className = "green";
+        console.log(listCurrentWeaterE1.lastChild);
+        listCurrentWeaterE1.lastChild.className = "green";
       } else if (uvIndex >= 3 && uvIndex <= 5) {
-        listCurrentWeaterE1.className = "yellow";
+        listCurrentWeaterE1.lastChild.className = "yellow";
       } else if (uvIndex >= 6 && uvIndex <= 7) {
-        listCurrentWeaterE1.className = "orange";
+        listCurrentWeaterE1.lastChild.className = "orange";
       } else if (uvIndex >= 8 && uvIndex <= 10) {
-        listCurrentWeaterE1.className = "red";
+        listCurrentWeaterE1.lastChild.className = "red";
       } else if (uvIndex >= 10) {
-        listCurrentWeaterE1.className = "pink";
+        listCurrentWeaterE1.lastChild.className = "pink";
       }
     }
     currentWeatherInfoE1.appendChild(listCurrentWeaterE1);
