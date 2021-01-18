@@ -1,0 +1,21 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 20px;
+}
+
+form label {
+  font-size: 140%;
+}
+.btn .btn-primary {
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+#future-weather {
+  max-width: 12rem;
+}
+.emoj {
+  content: "\u2109";
+}
