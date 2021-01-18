@@ -8,7 +8,9 @@ var currentWeatherContainerE1 = document.querySelector(
 var futureWeatherContainer = document.querySelector("#future-weather");
 var searchHistory = document.querySelector("#search-history");
 var cityHistory = [];
+
 //fetch the weather from open weather API
+
 var getWeatherInfo = function (city) {
   fetch(
     "http://api.openweathermap.org/data/2.5/forecast?q=" +
@@ -16,7 +18,6 @@ var getWeatherInfo = function (city) {
       ",US&appid=9a13e2c3a669281036969bd73512a30b"
   )
     .then(function (response) {
-      console.log(response);
       if (response.ok) {
         return response.json();
       } else {
@@ -25,7 +26,6 @@ var getWeatherInfo = function (city) {
     })
     .then(function (data) {
       if (typeof data !== "undefined") {
-        console.log(data);
         var weatherData = data;
       }
 
@@ -67,28 +67,29 @@ var getWeatherInfo = function (city) {
             })
             .catch((error) => {
               errorMessage();
-              console.log(error);
             });
         })
         .catch(function (error) {
           errorMessage();
-          console.log(error);
         });
     })
     .catch((error) => {
       errorMessage();
-      console.log("unable to connect the server" + error);
     });
 };
+
+//display error message if fetch process failed
 function errorMessage() {
   cityNameE1.textContent = "";
   currentWeatherInfoE1.textContent = "";
   futureWeatherContainer.textContent = "";
   var error = document.createElement("div");
-  error.classListName = "alert alert-secondary";
-  error.textContent = "unable to connect the server please check your input";
-  currentWeatherInfoE1.appendChild(error);
+  error.className = "alert alert-danger mt-3";
+  error.textContent = "unable to connect the server please check your input!!";
+  cityNameE1.appendChild(error);
 }
+
+//get userInput which is city name
 var getUserCity = function (event) {
   event.preventDefault();
   var userCity = userInputE1.value.trim();
@@ -100,7 +101,7 @@ var getUserCity = function (event) {
   }
 };
 
-//append city name
+//append city name to the DOM
 function appendCityName(city) {
   var cityListed = checkHistoryCity(city);
   if (cityListed) {
@@ -122,16 +123,15 @@ function checkHistoryCity(city) {
   cityHistory.push(city);
   return flag;
 }
+//change data format inorder to save the localstorage
 function ChangeDataFormat(data, UvIndex) {
   var weatherInfo = JSON.parse(localStorage.getItem("weather-info")) || [];
-  // var weatherInfo = [];
-  console.log(data);
   var uniqeData = filterUniqueData(data);
   data.list = uniqeData;
   var weatherFutureInfo = {};
   var weather = [];
   var city = {};
-  console.log(data);
+
   weatherFutureInfo.date = data.list[0].dt_txt;
   weatherFutureInfo.icon = data.list[0].weather[0].icon;
   weatherFutureInfo.temp = data.list[0].main.temp;
@@ -139,12 +139,10 @@ function ChangeDataFormat(data, UvIndex) {
   weatherFutureInfo.speed = data.list[0].wind.speed;
   weatherFutureInfo.Uvindex = UvIndex.value;
   weather.push(weatherFutureInfo);
-  console.log(data);
 
   for (var i = 1; i < 6; i++) {
     var weatherFutureInfo = {};
     weatherFutureInfo.date = data.list[i].dt_txt;
-    console.log(weatherFutureInfo.date);
     weatherFutureInfo.temp = data.list[i].main.temp;
     weatherFutureInfo.humidity = data.list[i].main.humidity;
     weather.push(weatherFutureInfo);
@@ -174,28 +172,26 @@ function filterUniqueData(data) {
   for (let i = 0; i < array.length; i++) {
     var currentDate = array[i].dt_txt;
     currentDate = moment(currentDate).format("L");
-    // 2021 - 01 - 18;
-    console.log(currentDate);
+
     var dateExists = uniqueDate.indexOf(currentDate);
     if (dateExists < 0) {
       distinct.push(array[i]);
       uniqueDate.push(currentDate);
     }
   }
-  console.log(distinct);
+
   return distinct;
 }
 //save weatherinfo to the localstorage
 function saveWeatherInfo(weatherInfo) {
-  console.log(weatherInfo);
   localStorage.setItem("weather-info", JSON.stringify(weatherInfo));
 }
+//display current days weather status
 function displayWeatherStatus(weatherInfo) {
-  console.log(weatherInfo);
   cityNameE1.textContent = "";
   currentWeatherInfoE1.textContent = "";
   futureWeatherContainer.textContent = "";
-  console.log(weatherInfo);
+
   var currentDate = weatherInfo.weather[0].date;
 
   currentDate = moment(currentDate).format("L");
@@ -203,18 +199,14 @@ function displayWeatherStatus(weatherInfo) {
   var weatherIcon = weatherInfo.weather[0].icon;
   var city = weatherInfo.name;
 
-  console.log(city);
-
   var weatherIconI = document.createElement("img");
   weatherIconI.className = "fs-3 text";
   weatherIconI.src = "http://openweathermap.org/img/wn/" + weatherIcon + ".png";
-  // document.append(weatherIconI);
 
   cityNameE1.innerHTML =
     "<span>" + city + " " + "&#40;" + currentDate + "&#41</span>";
   cityNameE1.append(weatherIconI);
-  // tempSpanE1 = document.createElement("span");
-  // tempSpanE1.innerHTML = "<span>" + temp + "&#8457;" + "</span>";
+
   var currentDayWeather = {
     Temprature: weatherInfo.weather[0].temp,
     humidity: weatherInfo.weather[0].humidity,
@@ -222,8 +214,6 @@ function displayWeatherStatus(weatherInfo) {
     UvIndex: weatherInfo.weather[0].Uvindex,
   };
 
-  // weatherInfo[0].push(city);
-  // weatherInfo.city.push(currentDayWeather);
   var index = -1;
   for (var i in currentDayWeather) {
     index++;
@@ -233,8 +223,6 @@ function displayWeatherStatus(weatherInfo) {
     listCurrentWeaterE1.innerHTML =
       i + ":" + "<span>" + currentDayWeather[i] + "</span>";
 
-    // index++;
-    console.log(currentDayWeather[i]);
     if (index === 0) {
       var degreeF = document.createElement("span");
       degreeF.innerHTML = "<span>&#8457;</span>";
@@ -260,30 +248,17 @@ function displayWeatherStatus(weatherInfo) {
 
   displayFutureWeather(weatherInfo);
 }
-// weatherInfo.forEach((item) => {
-//   for (const property in item) {
-//     console.log(item[property]);
-//   }
-// });
 
 //display 5 day weather status
 function displayFutureWeather(weatherInfo) {
   for (var i = 1; i < 6; i++) {
-    // var UvIndex
     var date = weatherInfo.weather[i].date;
     date = moment(date).format("L");
-    // var sunnyEmoji=data[i]
     var temp = weatherInfo.weather[i].temp;
     var humidity = weatherInfo.weather[i].humidity;
-    // var futureForcast = { date: date, temp: temp, humidity: humidity };
-    // var listE1 = document.createElement("div");
-    // listE1.className = "card";
 
     var cardWrapper = document.createElement("div");
-
     cardWrapper.className = "col card-body";
-    // var cardBody = document.createElement("div");
-    // cardBody.className = "";
 
     var headerE1 = document.createElement("h4");
     headerE1.className = "";
@@ -294,7 +269,6 @@ function displayFutureWeather(weatherInfo) {
     unorderedListE2.textContent = temp;
 
     var listIcon = document.createElement("p");
-
     if (temp >= 65) {
       listIcon.className = "ion-ios7-sunny list-unstyled";
     } else if (Math.floor(temp) >= 45 && Math.floor(temp) < 65) {
@@ -304,10 +278,6 @@ function displayFutureWeather(weatherInfo) {
     } else if (Math.floor(temp) < 25) {
       listIcon.className = "ion-ios7-rainy   list-unstyled";
     }
-
-    // <i class="ion-ios7-sunny"></i>
-    // <i class="ion-ios7-partlysunny"></i>
-    // <i class="ion-ios7-rainy"></i>
 
     var degreeF = document.createElement("span");
     degreeF.innerHTML = "<span>&#8457;</span>";
@@ -329,20 +299,16 @@ var retriveWeatherInfo = function (event) {
   var getCityName = event.target.innerHTML;
   displayLocalData(getCityName);
 };
-searchHistory.addEventListener("click", retriveWeatherInfo);
-
-userFormE1.addEventListener("submit", getUserCity);
 
 //display datta from localstorage when we click the history list
 function displayLocalData(cityName) {
   var weatherInfo = JSON.parse(localStorage.getItem("weather-info"));
-
-  console.log(cityName);
   for (var i = 0; i < weatherInfo.length; i++) {
     if (weatherInfo[i].name.toUpperCase() == cityName.toUpperCase()) {
       displayWeatherStatus(weatherInfo[i]);
     }
-
-    // displayWeatherStatus(item.weather, item.name, item.uvIndex);
   }
 }
+//event listners for the history and form
+searchHistory.addEventListener("click", retriveWeatherInfo);
+userFormE1.addEventListener("submit", getUserCity);
