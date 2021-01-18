@@ -100,6 +100,17 @@ function appendCityName(city) {
   listHistoryE1.textContent = city;
   searchHistory.append(listHistoryE1);
 }
+//check the city name in case if it exist in localstorage
+function checkHistoryCity(city) {
+  var flag = false;
+  cityHistory.forEach((cityitem) => {
+    if (cityitem.toUpperCase() === city.toUpperCase()) {
+      flag = true;
+    }
+  });
+  cityHistory.push(city);
+  return flag;
+}
 function ChangeDataFormat(data, UvIndex) {
   var weatherInfo = JSON.parse(localStorage.getItem("weather-info")) || [];
   // var weatherInfo = [];
@@ -300,5 +311,18 @@ function displayFutureWeather(weatherInfo) {
     cardWrapper.appendChild(listaE1);
 
     futureWeatherContainer.appendChild(cardWrapper);
+  }
+}
+//display datta from localstorage when we click the history list
+function displayLocalData(cityName) {
+  var weatherInfo = JSON.parse(localStorage.getItem("weather-info"));
+
+  console.log(cityName);
+  for (var i = 0; i < weatherInfo.length; i++) {
+    if (weatherInfo[i].name.toUpperCase() == cityName.toUpperCase()) {
+      displayWeatherStatus(weatherInfo[i]);
+    }
+
+    // displayWeatherStatus(item.weather, item.name, item.uvIndex);
   }
 }
