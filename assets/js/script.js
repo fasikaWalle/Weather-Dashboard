@@ -144,3 +144,22 @@ function ChangeDataFormat(data, UvIndex) {
 
   displayWeatherStatus(city);
 }
+//filter the data by its date inorder to avoid similar dates
+function filterUniqueData(data) {
+  var array = data.list;
+  var uniqueDate = [];
+  var distinct = [];
+  for (let i = 0; i < array.length; i++) {
+    var currentDate = array[i].dt_txt;
+    currentDate = moment(currentDate).format("L");
+    // 2021 - 01 - 18;
+    console.log(currentDate);
+    var dateExists = uniqueDate.indexOf(currentDate);
+    if (dateExists < 0) {
+      distinct.push(array[i]);
+      uniqueDate.push(currentDate);
+    }
+  }
+  console.log(distinct);
+  return distinct;
+}
