@@ -129,6 +129,7 @@ function appendCityName(city) {
 }
 //save to local storage
 function saveWeatherInfo(weatherInfo) {
+  console.log(weatherInfo);
   localStorage.setItem("weather-info", JSON.stringify(weatherInfo));
 }
 // retrive from  local storage
@@ -152,13 +153,13 @@ function filterUniqueData(data) {
   var distinct = [];
   for (let i = 0; i < array.length; i++) {
     var currentDate = array[i].dt_txt;
-    currentDate = moment(currentDate).format("YYYY - MM - DD");
+    currentDate = moment(currentDate).format("L");
     // 2021 - 01 - 18;
     console.log(currentDate);
     var dateExists = uniqueDate.indexOf(currentDate);
-    if (dateExists != 0) {
+    if (dateExists < 0) {
       distinct.push(array[i]);
-      uniqueDate.push(array[i].dt_txt);
+      uniqueDate.push(currentDate);
     }
   }
   console.log(distinct);
@@ -167,16 +168,13 @@ function filterUniqueData(data) {
 function ChangeDataFormat(data, UvIndex) {
   var weatherInfo = JSON.parse(localStorage.getItem("weather-info")) || [];
   // var weatherInfo = [];
-  var uniqe = filterUniqueData(data);
-  console.log(uniqe);
+  console.log(data);
+  var uniqeData = filterUniqueData(data);
+  data.list = uniqeData;
   var weatherFutureInfo = {};
   var weather = [];
   var city = {};
-  var uniqueDate = data.list.filter(function (value, index, self) {
-    return self.indexOf(value) == index;
-  });
-
-  console.log(uniqueDate);
+  console.log(data);
   weatherFutureInfo.date = data.list[0].dt_txt;
   weatherFutureInfo.icon = data.list[0].weather[0].icon;
   weatherFutureInfo.temp = data.list[0].main.temp;
@@ -184,11 +182,12 @@ function ChangeDataFormat(data, UvIndex) {
   weatherFutureInfo.speed = data.list[0].wind.speed;
   weatherFutureInfo.Uvindex = UvIndex.value;
   weather.push(weatherFutureInfo);
+  console.log(data);
 
   for (var i = 1; i < 6; i++) {
     var weatherFutureInfo = {};
     weatherFutureInfo.date = data.list[i].dt_txt;
-
+    console.log(weatherFutureInfo.date);
     weatherFutureInfo.temp = data.list[i].main.temp;
     weatherFutureInfo.humidity = data.list[i].main.humidity;
     weather.push(weatherFutureInfo);
@@ -207,6 +206,7 @@ function ChangeDataFormat(data, UvIndex) {
     weatherInfo.push(city);
     saveWeatherInfo(weatherInfo);
   }
+
   displayWeatherStatus(city);
 }
 
@@ -230,10 +230,11 @@ function displayLocalData(cityName) {
 //display weather status for the current day and for the future 5 days
 // var displayWeatherStatus = function (data, city, uvIndex) {
 function displayWeatherStatus(weatherInfo) {
+  console.log(weatherInfo);
   cityNameE1.textContent = "";
   currentWeatherInfoE1.textContent = "";
   futureWeatherContainer.textContent = "";
-
+  console.log(weatherInfo);
   var currentDate = weatherInfo.weather[0].date;
 
   currentDate = moment(currentDate).format("L");
@@ -266,29 +267,33 @@ function displayWeatherStatus(weatherInfo) {
   for (var i in currentDayWeather) {
     index++;
     listCurrentWeaterE1 = document.createElement("li");
+
     listCurrentWeaterE1.className = "list-unstyled list-group-item border-0";
-    listCurrentWeaterE1.textContent = i + ":" + currentDayWeather[i];
-    console.log(currentDayWeather[i]);
+    listCurrentWeaterE1.innerHTML =
+      i + ":" + "<span class='uvIndex'>" + currentDayWeather[i] + "</span>";
+
     // index++;
-    console.log(index);
-    if (index == 0) {
+    console.log(currentDayWeather[i]);
+    if (index === 0) {
       var degreeF = document.createElement("span");
       degreeF.innerHTML = "<span>&#8457;</span>";
       listCurrentWeaterE1.appendChild(degreeF);
     }
-
-    if (index == 3) {
-      var uvIndex = Math.floor(currentDayWeather[i]);
-      if (uvIndex >= 0 && uvIndex <= 2) {
-        listCurrentWeaterE1.className = "green";
-      } else if (uvIndex >= 3 && uvIndex <= 5) {
-        listCurrentWeaterE1.className = "yellow";
-      } else if (uvIndex >= 6 && uvIndex <= 7) {
-        listCurrentWeaterE1.className = "orange";
-      } else if (uvIndex >= 8 && uvIndex <= 10) {
-        listCurrentWeaterE1.className = "red";
-      } else if (uvIndex >= 10) {
-        listCurrentWeaterE1.className = "pink";
+    if (index === 3) {
+      var uvIn = document.querySelector(".uvIndex");
+      if (uvIn.textContent < 10) {
+        var uvIndex = Math.floor(currentDayWeather[i]);
+        if (uvIndex >= 0 && uvIndex <= 2) {
+          uvIn.className = "green";
+        } else if (uvIndex >= 3 && uvIndex <= 5) {
+          listCurrentWeaterE1.className = "yellow";
+        } else if (uvIndex >= 6 && uvIndex <= 7) {
+          listCurrentWeaterE1.className = "orange";
+        } else if (uvIndex >= 8 && uvIndex <= 10) {
+          listCurrentWeaterE1.className = "red";
+        } else if (uvIndex >= 10) {
+          listCurrentWeaterE1.className = "pink";
+        }
       }
     }
     currentWeatherInfoE1.appendChild(listCurrentWeaterE1);
@@ -306,7 +311,6 @@ function displayFutureWeather(weatherInfo) {
   for (var i = 1; i < 6; i++) {
     // var UvIndex
     var date = weatherInfo.weather[i].date;
-    console.log(date);
     date = moment(date).format("L");
     // var sunnyEmoji=data[i]
     var temp = weatherInfo.weather[i].temp;
@@ -316,30 +320,29 @@ function displayFutureWeather(weatherInfo) {
     // listE1.className = "card";
 
     var cardWrapper = document.createElement("div");
-    cardWrapper.className = "card";
-    var cardBody = document.createElement("div");
-    cardBody.className = "card-body";
+
+    cardWrapper.className = "col card-body";
+    // var cardBody = document.createElement("div");
+    // cardBody.className = "";
 
     var headerE1 = document.createElement("h4");
-    headerE1.className = "card-title";
+    headerE1.className = "";
     headerE1.textContent = date;
 
-    var unorderedListE2 = document.createElement("li");
-    unorderedListE2.className = "card-text list-unstyled";
+    var unorderedListE2 = document.createElement("p");
+    unorderedListE2.className = "list-unstyled";
     unorderedListE2.textContent = temp;
 
-    var listIcon = document.createElement("li");
+    var listIcon = document.createElement("p");
 
     if (temp >= 65) {
-      console.log("sunny");
-      listIcon.innerHTML = "<i></i>";
       listIcon.className = "ion-ios7-sunny list-unstyled";
     } else if (Math.floor(temp) >= 45 && Math.floor(temp) < 65) {
-      console.log("partially");
+      listIcon.className = "ion-ios7-partlysunny  list-unstyled";
     } else if (Math.floor(temp) >= 25 && Math.floor(temp) <= 35) {
-      console.log("partially");
+      listIcon.className = "cloudy list-unstyled";
     } else if (Math.floor(temp) < 25) {
-      console.log("rainy");
+      listIcon.className = "ion-ios7-rainy   list-unstyled";
     }
 
     // <i class="ion-ios7-sunny"></i>
@@ -353,11 +356,10 @@ function displayFutureWeather(weatherInfo) {
     var listaE1 = document.createElement("li");
     listaE1.textContent = humidity;
     listaE1.className = "card-text list-unstyled";
-
-    cardBody.appendChild(unorderedListE2);
-    cardBody.appendChild(listIcon);
-    cardBody.appendChild(listaE1);
-    cardWrapper.appendChild(cardBody);
+    cardWrapper.appendChild(headerE1);
+    cardWrapper.appendChild(unorderedListE2);
+    cardWrapper.appendChild(listIcon);
+    cardWrapper.appendChild(listaE1);
 
     futureWeatherContainer.appendChild(cardWrapper);
   }

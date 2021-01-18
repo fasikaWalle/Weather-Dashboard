@@ -4,6 +4,10 @@
   box-sizing: border-box;
   font-size: 20px;
 }
+body {
+  overflow-x: hidden;
+}
+
 .searchCity {
   margin-left: 4%;
 }
@@ -14,7 +18,9 @@ form label {
   font-size: 1.5rem;
   color: #fff;
 }
-
+#current-Weather-Container {
+  padding-right: 0;
+}
 #future-weather {
   max-width: 12rem;
 }
@@ -22,15 +28,16 @@ form label {
   text-align: center;
   background-color: #2980b9;
   color: #fff;
+  margin-right: 10px;
 }
 .cloudy {
   color: rgb(132, 200, 240);
   font-size: 200%;
 }
 .ion-ios7-sunny {
-  font-size: 250%;
+  font-size: 260%;
   text-align: center;
-  color: rgb(247, 46, 46);
+  color: #ff372d;
 }
 .ion-ios7-partlysunny {
   font-size: 250%;
@@ -48,8 +55,10 @@ form label {
   padding: 0;
   padding-top: 0;
   height: 30px;
-  width: 28%;
+  width: 15%;
   color: #fff;
+  list-style: none;
+  margin-bottom: 20px;
 }
 .red {
   background-color: #e74c3c;
