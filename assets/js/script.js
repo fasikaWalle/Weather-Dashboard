@@ -88,3 +88,15 @@ var getUserCity = function (event) {
     alert("please insert correct name");
   }
 };
+
+//append city name
+function appendCityName(city) {
+  var cityListed = checkHistoryCity(city);
+  if (cityListed) {
+    return;
+  }
+  var listHistoryE1 = document.createElement("li");
+  listHistoryE1.className = "list-group-item";
+  listHistoryE1.textContent = city;
+  searchHistory.append(listHistoryE1);
+}
