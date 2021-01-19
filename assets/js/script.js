@@ -86,7 +86,7 @@ function errorMessage(error) {
   var errorText = document.createElement("div");
   errorText.className = "alert alert-danger mt-3";
   errorText.textContent =
-    "unable to connect the server please check your input!!" + error;
+    error;
   cityNameE1.appendChild(errorText);
   throw error;
 }
