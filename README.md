@@ -24,3 +24,4 @@ This application is designed to show the 5 days forcast weather for the specific
 - Live site URL:https://fasikawalle.github.io/Weather-Dashboard/
 
 ## screenshots
+![Document](https://user-images.githubusercontent.com/73629983/104972396-46676300-59b7-11eb-94ae-1e1745bddb60.png)
