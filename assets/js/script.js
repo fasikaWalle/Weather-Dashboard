@@ -11,7 +11,7 @@ var cityHistory = [];
 
 //fetch the weather from open weather API
 
-var getWeatherInfo = function (city) {
+function getWeatherInfo(city) {
   fetch(
     "https://api.openweathermap.org/data/2.5/forecast?q=" +
       city +
@@ -66,31 +66,33 @@ var getWeatherInfo = function (city) {
               // displayWeatherStatus(weatherData, data);
             })
             .catch((error) => {
-              errorMessage();
+              errorMessage(error);
             });
         })
         .catch(function (error) {
-          errorMessage();
+          errorMessage(error);
         });
     })
     .catch((error) => {
-      errorMessage();
+      errorMessage(error);
     });
-};
+}
 
 //display error message if fetch process failed
-function errorMessage() {
+function errorMessage(error) {
   cityNameE1.textContent = "";
   currentWeatherInfoE1.textContent = "";
   futureWeatherContainer.textContent = "";
-  var error = document.createElement("div");
-  error.className = "alert alert-danger mt-3";
-  error.textContent = "unable to connect the server please check your input!!";
-  cityNameE1.appendChild(error);
+  var errorText = document.createElement("div");
+  errorText.className = "alert alert-danger mt-3";
+  errorText.textContent =
+    "unable to connect the server please check your input!!" + error;
+  cityNameE1.appendChild(errorText);
+  throw error;
 }
 
 //get userInput which is city name
-var getUserCity = function (event) {
+function getUserCity(event) {
   event.preventDefault();
   var userCity = userInputE1.value.trim();
   userInputE1.value = "";
@@ -99,7 +101,7 @@ var getUserCity = function (event) {
   } else {
     alert("please insert correct name");
   }
-};
+}
 
 //append city name to the DOM
 function appendCityName(city) {
@@ -131,7 +133,7 @@ function ChangeDataFormat(data, UvIndex) {
   var weatherFutureInfo = {};
   var weather = [];
   var city = {};
-
+  console.log(data.list[0].dt_txt);
   weatherFutureInfo.date = data.list[0].dt_txt;
   weatherFutureInfo.icon = data.list[0].weather[0].icon;
   weatherFutureInfo.temp = data.list[0].main.temp;
@@ -140,7 +142,7 @@ function ChangeDataFormat(data, UvIndex) {
   weatherFutureInfo.Uvindex = UvIndex.value;
   weather.push(weatherFutureInfo);
 
-  for (var i = 1; i < 6; i++) {
+  for (var i = 1; i < data.list.length; i++) {
     var weatherFutureInfo = {};
     weatherFutureInfo.date = data.list[i].dt_txt;
     weatherFutureInfo.temp = data.list[i].main.temp;
@@ -252,7 +254,7 @@ function displayWeatherStatus(weatherInfo) {
 
 //display 5 day weather status
 function displayFutureWeather(weatherInfo) {
-  for (var i = 1; i < 6; i++) {
+  for (var i = 1; i < weatherInfo.weather.length; i++) {
     var date = weatherInfo.weather[i].date;
     date = moment(date).format("L");
     var temp = weatherInfo.weather[i].temp;
@@ -296,10 +298,10 @@ function displayFutureWeather(weatherInfo) {
   }
 }
 //target the history city name by event deligation
-var retriveWeatherInfo = function (event) {
+function retriveWeatherInfo(event) {
   var getCityName = event.target.innerHTML;
   displayLocalData(getCityName);
-};
+}
 
 //display datta from localstorage when we click the history list
 function displayLocalData(cityName) {
